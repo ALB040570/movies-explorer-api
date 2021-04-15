@@ -73,11 +73,10 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   // movieId — _id фильма, который содержится в ответе сервиса MoviesExplorer. Обязательное поле.
-  // movieId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'movie',
-  //   required: true,
-  // },
+  movieId: {
+    type: Number,
+    required: true,
+  },
   // nameRU — название фильма на русском языке. Обязательное поле-строка.
   nameRU: {
     type: String,
@@ -90,4 +89,8 @@ const movieSchema = new mongoose.Schema({
   },
 
 });
+
+// совместный индекс для обеспечения уникальности пары: пользоваатель - фильм
+movieSchema.index({ owner: 1, movieId: 1 }, { unique: true });
+
 module.exports = mongoose.model('movie', movieSchema);

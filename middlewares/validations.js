@@ -55,6 +55,7 @@ const postMoviesValidate = celebrate({
     thumbnail: Joi.string()
       .required()
       .regex(/^http[s]?:\/\/\w+/),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
@@ -62,7 +63,7 @@ const postMoviesValidate = celebrate({
 
 const deleteMovieValidate = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().hex().required().length(24),
+    movieId: Joi.number().required(),
   }),
 });
 
