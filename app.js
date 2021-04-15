@@ -17,11 +17,11 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 const { errors } = require('celebrate');
 const moviesRouter = require('./routes/movies.js');
 const userRouter = require('./routes/users.js');
-// const { createUser, login } = require('./controllers/users');
-// const auth = require('./middlewares/auth');
+const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 // const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const { postSignUpValidate, postSignInValidate } = require('./middlewares/validations');
+const { postSignUpValidate, postSignInValidate } = require('./middlewares/validations');
 const NotFoundError = require('./errors/not-found-err');
 
 // app.use('*', cors(options));
@@ -39,11 +39,11 @@ app.use(bodyParser.json());
 // });
 
 // роуты, не требующие авторизации
-// app.post('/signup', postSignUpValidate, createUser);
-// app.post('/signin', postSignInValidate, login);
+app.post('/signup', postSignUpValidate, createUser);
+app.post('/signin', postSignInValidate, login);
 
 // авторизация
-// app.use(auth);
+app.use(auth);
 
 // роуты, которым авторизация нужна
 

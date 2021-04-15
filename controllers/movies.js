@@ -5,9 +5,6 @@ const Forbidden = require('../errors/forbidden-err');
 const ConflictError = require('../errors/conflict-err');
 
 const getMovies = (req, res, next) => {
-  req.user = {
-    _id: '6076c2ec8e7f7d84d6f9e914',
-  };
   Movie.find({ owner: req.user._id })
     .populate(['owner'])
     .then((movies) => res.status(200).send({ data: movies }))
@@ -15,9 +12,6 @@ const getMovies = (req, res, next) => {
 };
 
 const postMovie = (req, res, next) => {
-  req.user = {
-    _id: '6076c2ec8e7f7d84d6f9e914',
-  };
   const {
     country,
     director,
@@ -55,9 +49,6 @@ const postMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  req.user = {
-    _id: '6076c2ec8e7f7d84d6f9e914',
-  };
   Movie
     .findOne({ movieId: req.params.movieId })
     .orFail(() => new NotFoundError('Фильм с таким id не найден'))
