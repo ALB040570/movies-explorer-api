@@ -20,7 +20,7 @@ const userRouter = require('./routes/users.js');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { postSignUpValidate, postSignInValidate } = require('./middlewares/validations');
 const NotFoundError = require('./errors/not-found-err');
 
@@ -30,7 +30,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use(requestLogger); // подключаем логгер запросов
+app.use(requestLogger); // подключаем логгер запросов
 
 // app.get('/crash-test', () => {
 //   setTimeout(() => {
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
-// app.use(errorLogger); // подключаем логгер ошибок
+app.use(errorLogger); // подключаем логгер ошибок
 // здесь обрабатываем все ошибки
 // обработчики ошибок
 app.use(errors()); // обработчик ошибок celebrate
