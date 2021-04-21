@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const { NODE_ENV, DB_CONNECT } = process.env;
+const helmet = require('helmet');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -18,51 +18,29 @@ mongoose.connect(NODE_ENV === 'production' ? DB_CONNECT : 'mongodb://localhost:2
 });
 
 const { errors } = require('celebrate');
-const moviesRouter = require('./routes/movies.js');
-const userRouter = require('./routes/users.js');
-const { createUser, login } = require('./controllers/users');
-const auth = require('./middlewares/auth');
+const uniformRouter = require('./routes/index.js');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { postSignUpValidate, postSignInValidate } = require('./middlewares/validations');
-const NotFoundError = require('./errors/not-found-err');
+const limiter = require('./middlewares/limiter');
 
-// app.use('*', cors(options));
 app.use(cors());
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(helmet());
+
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.json());
 
 app.use(requestLogger); // подключаем логгер запросов
 
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+app.use(limiter); // подключаем ограничитель запросов
 
-// роуты, не требующие авторизации
-app.post('/signup', postSignUpValidate, createUser);
-app.post('/signin', postSignInValidate, login);
-
-// авторизация
-app.use(auth);
-
-// роуты, которым авторизация нужна
-
-app.use('/', moviesRouter);
-app.use('/', userRouter);
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
-});
+app.use('/', uniformRouter); // подключаем единый роут
 
 app.use(errorLogger); // подключаем логгер ошибок
-// здесь обрабатываем все ошибки
-// обработчики ошибок
+
 app.use(errors()); // обработчик ошибок celebrate
 
-// наш централизованный обработчик
-app.use(errorHandler);
+app.use(errorHandler); // централизованный обработчик ошибок
 
 app.listen(PORT);

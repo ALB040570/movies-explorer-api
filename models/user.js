@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const messages = require('../utils/constans');
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: [true, 'отсутствует обязательное поле "email"'],
+    required: [true],
     unique: true,
     validate: { // опишем свойство validate
       validator(v) { // validator - функция проверки данных. v - значение свойства email
@@ -16,15 +17,15 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'отсутствует обязательное поле "Пароль"'],
+    required: [true],
     select: false,
   },
   name: {
     type: String,
     // required: [true, 'отсутствует обязательное поле "имя пользователя"'],
-    minlength: [2, 'имя пользователя короче двух символов'],
-    maxlength: [30, 'имя пользователя длинее 30 символов'],
-    required: [true, 'отсутствует обязательное поле "Имя"'],
+    minlength: [2],
+    maxlength: [30],
+    required: [true],
   },
 
 });
@@ -37,14 +38,14 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .then((user) => {
       // не нашёлся — отклоняем промис
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        return Promise.reject(new Error(messages.loginErrMessage));
       }
 
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            return Promise.reject(new Error(messages.loginErrMessage));
           }
 
           return user; // теперь user доступен

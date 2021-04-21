@@ -1,8 +1,8 @@
 const Movie = require('../models/movie');
-const ValidationError = require('../errors/validation-err');
 const NotFoundError = require('../errors/not-found-err');
 const Forbidden = require('../errors/forbidden-err');
 const ConflictError = require('../errors/conflict-err');
+const messages = require('../utils/constans');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -43,7 +43,7 @@ const postMovie = (req, res, next) => {
   })
     .then((movie) => res.status(200).send({ data: movie }))
     .catch((err) => {
-      next(new ConflictError('Этот фильм уже сохранен текущим пользователем'));
+      next(new ConflictError(messages.postMovieConflictErrorMessage));
       next(err);
     });
 };
@@ -51,22 +51,16 @@ const postMovie = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie
     .findOne({ movieId: req.params.movieId })
-    .orFail(() => new NotFoundError('Фильм с таким id не найден'))
+    .orFail(() => new NotFoundError(messages.getMovienotFoundErrorMessage))
     .then((movie) => {
       if (!movie.owner._id.equals(req.user._id)) {
-        next(new Forbidden('Нельзя удалить фильм, сохраненный другим пользователем'));
+        next(new Forbidden(messages.deleteMovieforbiddenMessage));
       } else {
         Movie.deleteOne(movie)
           .then(() => res.send({ data: movie }));
       }
     })
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        next(new ValidationError('Невалидный id фильма'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {
