@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const messages = require('../utils/constans');
+const Unauthorized = require('../errors/unauthorized-err');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -12,7 +13,7 @@ const userSchema = new mongoose.Schema({
       validator(v) { // validator - функция проверки данных. v - значение свойства email
         return validator.isEmail(v); // если не почта, вернётся false
       },
-      message: 'Значение должно соответствовать схеме электронной почты.', // когда validator вернёт false, будет использовано это сообщение
+      message: messages.emailErrorMessage,
     },
   },
   password: {
@@ -38,14 +39,14 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .then((user) => {
       // не нашёлся — отклоняем промис
       if (!user) {
-        return Promise.reject(new Error(messages.loginErrMessage));
+        return Promise.reject(new Unauthorized(messages.loginErrMessage));
       }
 
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error(messages.loginErrMessage));
+            return Promise.reject(new Unauthorized(messages.loginErrMessage));
           }
 
           return user; // теперь user доступен

@@ -6,7 +6,6 @@ const messages = require('../utils/constans');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .populate(['owner'])
     .then((movies) => res.status(200).send({ data: movies }))
     .catch(next);
 };
@@ -43,14 +42,17 @@ const postMovie = (req, res, next) => {
   })
     .then((movie) => res.status(200).send({ data: movie }))
     .catch((err) => {
-      next(new ConflictError(messages.postMovieConflictErrorMessage));
+      if (err.name === 'MongoError' && err.code === 11000) {
+        next(new ConflictError(messages.postMovieConflictErrorMessage));
+        return;
+      }
       next(err);
     });
 };
 
 const deleteMovie = (req, res, next) => {
   Movie
-    .findOne({ movieId: req.params.movieId })
+    .findById({ _id: req.params.movieId }).select('+owner')
     .orFail(() => new NotFoundError(messages.getMovienotFoundErrorMessage))
     .then((movie) => {
       if (!movie.owner._id.equals(req.user._id)) {

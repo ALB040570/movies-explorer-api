@@ -9,5 +9,7 @@ const messages = {
   serverErrorMessage: 'На сервере произошла ошибка',
   routNotFoundErrorMessage: 'Запрашиваемый ресурс не найден',
   loginErrMessage: 'Неправильные почта или пароль',
+  urlErrorMessage: 'унифицированный указатель ресурса (URL-адрес) начинается не с http:// или https:// или не указан домен',
+  emailErrorMessage: 'Значение должно соответствовать схеме электронной почты',
 };
 module.exports = messages;

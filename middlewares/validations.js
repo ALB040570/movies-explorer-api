@@ -22,18 +22,6 @@ const patchUserValidate = celebrate({
   }),
 });
 
-const patchAvatarValidate = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/^http[s]?:\/\/\w+/),
-  }),
-});
-
-const getProfileValidate = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().hex().required().length(24),
-  }),
-});
-
 // проверяет фильм с переданными в теле
 // country, director, duration, year, description,
 // image, trailer, nameRU, nameEN и thumbnail, movieId
@@ -46,13 +34,14 @@ const postMoviesValidate = celebrate({
     description: Joi.string().required(),
     image: Joi.string()
       .required()
-      .regex(/^http[s]?:\/\/\w+/),
+      .regex(/^HTTP|HTTPS|http(s)?:\/\/(www\.)?[A-Za-z0-9]+([-.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,40}(:[0-9]{1,40})?(\/.*)?$/),
     trailer: Joi.string()
       .required()
-      .regex(/^http[s]?:\/\/\w+/),
+      .regex(/^HTTP|HTTPS|http(s)?:\/\/(www\.)?[A-Za-z0-9]+([-.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,40}(:[0-9]{1,40})?(\/.*)?$/),
     thumbnail: Joi.string()
       .required()
-      .regex(/^http[s]?:\/\/\w+/),
+      .regex(/^HTTP|HTTPS|http(s)?:\/\/(www\.)?[A-Za-z0-9]+([-.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,40}(:[0-9]{1,40})?(\/.*)?$/),
+
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -61,7 +50,7 @@ const postMoviesValidate = celebrate({
 
 const deleteMovieValidate = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.number().required(),
+    movieId: Joi.string().hex().required().length(24),
   }),
 });
 
@@ -69,8 +58,6 @@ module.exports = {
   postSignUpValidate,
   postSignInValidate,
   patchUserValidate,
-  patchAvatarValidate,
-  getProfileValidate,
   postMoviesValidate,
   deleteMovieValidate,
 };

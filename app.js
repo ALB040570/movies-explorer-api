@@ -1,23 +1,22 @@
 require('dotenv').config();
 
-const { NODE_ENV, DB_CONNECT } = process.env;
 const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+const { config, mongooseParams } = require('./utils/config.js');
 
-const { PORT = 3000 } = process.env;
+const {
+  NODE_ENV, DB_CONNECT,
+  PORT = config.PORT,
+  MONGO = config.MONGO,
+} = process.env;
 
 const app = express();
 // подключаемся к серверу mongo
-mongoose.connect(NODE_ENV === 'production' ? DB_CONNECT : 'mongodb://localhost:27017/bitfilmsdb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
+mongoose.connect(NODE_ENV === 'production' ? DB_CONNECT : MONGO, mongooseParams);
 
-const { errors } = require('celebrate');
 const uniformRouter = require('./routes/index.js');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');

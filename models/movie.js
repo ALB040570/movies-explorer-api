@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const messages = require('../utils/constans');
 
 const movieSchema = new mongoose.Schema({
   // country — страна создания фильма. Обязательное поле-строка.
@@ -32,11 +33,10 @@ const movieSchema = new mongoose.Schema({
     required: [true],
     validate: {
       validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9\-]+\.[a-z]+)(\/[\w\-\._~:\/\?#\[\]@\!\$&'\(\)\*\+,;=]*\/?#?)?/;
+        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9-]+\.[a-z]+)(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*\/?#?)?/;
         return regex.test(v);
       },
-      message: 'унифицированный указатель ресурса (URL-адрес) начинается не с http:// или https:// или не указан домен',
+      message: messages.urlErrorMessage,
     },
   },
   // trailer — ссылка на трейлер фильма. Обязательное поле-строка. Запишите её URL-адресом.
@@ -45,11 +45,10 @@ const movieSchema = new mongoose.Schema({
     required: [true],
     validate: {
       validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9\-]+\.[a-z]+)(\/[\w\-\._~:\/\?#\[\]@\!\$&'\(\)\*\+,;=]*\/?#?)?/;
+        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9-]+\.[a-z]+)(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*\/?#?)?/;
         return regex.test(v);
       },
-      message: 'унифицированный указатель ресурса (URL-адрес) начинается не с http:// или https:// или не указан домен',
+      message: messages.urlErrorMessage,
     },
   },
   // thumbnail — миниатюрное изображение постера к фильму.
@@ -59,11 +58,10 @@ const movieSchema = new mongoose.Schema({
     required: [true],
     validate: {
       validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9\-]+\.[a-z]+)(\/[\w\-\._~:\/\?#\[\]@\!\$&'\(\)\*\+,;=]*\/?#?)?/;
+        const regex = /(https?:\/\/)(w{3}\.)?([a-z0-9-]+\.[a-z]+)(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*\/?#?)?/;
         return regex.test(v);
       },
-      message: 'унифицированный указатель ресурса (URL-адрес) начинается не с http:// или https:// или не указан домен',
+      message: messages.urlErrorMessage,
     },
   },
   // owner — _id пользователя, который сохранил фильм. Обязательное поле.
@@ -71,6 +69,7 @@ const movieSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
+    select: false,
   },
   // movieId — _id фильма, который содержится в ответе сервиса MoviesExplorer. Обязательное поле.
   movieId: {
