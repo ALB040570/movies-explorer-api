@@ -11,5 +11,7 @@ const messages = {
   loginErrMessage: 'Неправильные почта или пароль',
   urlErrorMessage: 'унифицированный указатель ресурса (URL-адрес) начинается не с http:// или https:// или не указан домен',
   emailErrorMessage: 'Значение должно соответствовать схеме электронной почты',
+  deleteMovieSuccesBeginMessage: 'Фильм',
+  deleteMovieSuccesFinalMessage: 'удален',
 };
 module.exports = messages;

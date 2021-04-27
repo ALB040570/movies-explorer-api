@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');
 const NotFoundError = require('../errors/not-found-err');
-const Unauthorized = require('../errors/unauthorized-err');
 const messages = require('../utils/constans');
 
 const SALT_ROUNDS = 10;
@@ -24,13 +23,7 @@ const login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
-      if (err.statusCode === 401) {
-        next(new Unauthorized(err.message));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 const getProfile = (req, res, next) => {
