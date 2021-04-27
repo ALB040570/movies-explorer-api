@@ -58,7 +58,7 @@ const deleteMovie = (req, res, next) => {
       if (!movie.owner._id.equals(req.user._id)) {
         next(new Forbidden(messages.deleteMovieforbiddenMessage));
       } else {
-        Movie.deleteOne(movie).select('-owner')
+        Movie.deleteOne(movie)
           .then(() => {
             res.send({ message: `${messages.deleteMovieSuccesBeginMessage} ${movie.nameRU} ${messages.deleteMovieSuccesFinalMessage}` });
           });
