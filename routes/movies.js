@@ -9,14 +9,14 @@ const {
 } = require('../controllers/movies.js');
 
 // возвращает все сохранённые пользователем фильмы
-router.get('/movies', getMovies);
+router.get('/', getMovies);
 
 // создаёт фильм с переданными в теле
 // country, director, duration, year, description,
 // image, trailer, nameRU, nameEN и thumbnail, movieId
-router.post('/movies', postMoviesValidate, postMovie);
+router.post('/', postMoviesValidate, postMovie);
 
 // удаляет сохранённый фильм по _id
-router.delete('/movies/:movieId', deleteMovieValidate, deleteMovie);
+router.delete('/:movieId', deleteMovieValidate, deleteMovie);
 
 module.exports = router;

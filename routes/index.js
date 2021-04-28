@@ -14,15 +14,12 @@ const NotFoundError = require('../errors/not-found-err');
 router.post('/signup', postSignUpValidate, createUser);
 router.post('/signin', postSignInValidate, login);
 
-router.use((req, res, next) => {
+// роуты, которым авторизация нужна
+router.use('/movies', auth, moviesRouter);
+router.use('/users', auth, userRouter);
+
+router.use('/*', (req, res, next) => {
   next(new NotFoundError(messages.routNotFoundErrorMessage));
 });
-
-// авторизация
-router.use(auth);
-
-// роуты, которым авторизация нужна
-router.use('/', moviesRouter);
-router.use('/', userRouter);
 
 module.exports = router;
