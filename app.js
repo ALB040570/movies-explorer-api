@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const { config, mongooseParams } = require('./utils/config.js');
+const { config, mongooseParams } = require('./utils/config');
 
 const {
   NODE_ENV, DB_CONNECT,
@@ -17,7 +17,7 @@ const app = express();
 // подключаемся к серверу mongo
 mongoose.connect(NODE_ENV === 'production' ? DB_CONNECT : MONGO, mongooseParams);
 
-const uniformRouter = require('./routes/index.js');
+const uniformRouter = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');

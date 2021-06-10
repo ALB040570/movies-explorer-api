@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-const moviesRouter = require('./movies.js');
-const userRouter = require('./users.js');
+const moviesRouter = require('./movies');
+const userRouter = require('./users');
 const { createUser, login } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const messages = require('../utils/constans');

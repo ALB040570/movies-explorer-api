@@ -6,7 +6,7 @@ const {
 
 const {
   getMovies, postMovie, deleteMovie,
-} = require('../controllers/movies.js');
+} = require('../controllers/movies');
 
 // возвращает все сохранённые пользователем фильмы
 router.get('/', getMovies);
